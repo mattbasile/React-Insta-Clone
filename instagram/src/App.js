@@ -1,48 +1,43 @@
 import React, { Component } from 'react';
-import PostContainer from './components/PostContainer/PostContainer';
-import SearchBar from './components/SearchBar/SearchBar';
-import DummyData from './dummy-data';
+import PostPage from './components/PostContainer/PostPage';
+import Login from './components/Login/Login'
 import './App.css';
-import PropTypes from 'prop-types';
-
+import authenticate from './components/authentication/authenticate';
 
 class App extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state = {
-      dummyData: DummyData,
-      
+      username: props.username,
+      password: "",
+      loggedIn: props.loggedIn,
     }
   }
-  handleChanges = ev => {
-    this.setState({ [ev.target.name]: ev.target.value });
-  }
 
+  // userLogIn = () =>{
+  //   if(this.state.loggedIn === true){
+  //     let newUsername = localStorage.getItem('username');
+  //     console.log(newUsername);
+  //     this.setState({username: newUsername});
+  //   }
+  //   this.setState({username: ''})
+  // }
+  // componentDidMount(){
+  //   userLogIn();
+  // }
   render() {
-    console.log(this.state.dummyData);
+    
     return (
       <div className="App">
-        <SearchBar />
-        {this.state.dummyData.map((post, i) =>{
-          return <PostContainer handleChanges={this.handleChanges} key={i} post={post} />
-        })}
+       {/* {window.onload = this.loggedIn} */}
+        <PostPage 
+        username={this.state.username}
+        logout={this.props.logout}
+        />
       </div>
     );
   }
 }
 
-App.propTypes={
-  dummyData: PropTypes.shape({
-    comments: PropTypes.arrayOf(PropTypes.shape({
-      username: PropTypes.string,
-      text: PropTypes.string
-    })),
-    imageUrl: PropTypes.string,
-    likes: PropTypes.number,
-    thumbnailUrl: PropTypes.string,
-    timeStamp: PropTypes.string,
-    username: PropTypes.string,
-  })
-}
 
-export default App;
+export default authenticate(App)(Login);

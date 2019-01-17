@@ -1,6 +1,7 @@
 import React, {Component}from 'react';
 import PropTypes from 'prop-types';
 import Comment from './Comment'
+import ActionHeader from './ActionHeader'
 
 class CommentSection extends Component {
     constructor(props){
@@ -8,6 +9,7 @@ class CommentSection extends Component {
         this.state ={
             commentList: props.comments,
             comment: '',
+            username: props.username
         }
         console.log(this.state.commentList);
     }
@@ -19,23 +21,23 @@ class CommentSection extends Component {
         ev.preventDefault();
         this.setState({
            commentList: [...this.state.commentList, {
-               username: "mattbasile2",
+               username: this.state.username,
                text: this.state.comment
            }],
            text: ''
         })
-        this.state.comment = '';
+        window.localStorage.setItem('comments', JSON.stringify(this.state.commentList));
+        this.setState({comment: ''})
         ev.target.firstChild.value="";
+        console.log(window.localStorage.getItem('comments'))
     };
 
     render(){
+        
     return (
       <div className="comment-section" >
-          <div className="d-flex action-btns">
-              <i className="far fa-heart"/>
-              <i className="far fa-comment"/>
-          </div>
-          <p className="font-weight-bold">{this.props.likes} likes</p>
+          <ActionHeader likes={this.props.likes}/>
+          {/* <p className="font-weight-bold">{this.props.likes} likes</p> */}
           
           {this.state.commentList.map((comment, i) => {
           return <Comment key={i} username={comment.username} text={comment.text} />}
